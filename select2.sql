@@ -1,18 +1,18 @@
 SELECT ename
-     , sal "ÀÎ»óÀü ±Þ¿©"
-     , sal + comm "ÃÑ±Þ¿©"
-     , (sal + comm) * 1.1 as "ÀÎ»óµÈ ±Þ¿©(±Þ¿©+º¸³Ê½º)"
+     , sal "ï¿½Î»ï¿½ï¿½ï¿½ ï¿½Þ¿ï¿½"
+     , sal + comm "ï¿½Ñ±Þ¿ï¿½"
+     , (sal + comm) * 1.1 as "ï¿½Î»ï¿½ï¿½ ï¿½Þ¿ï¿½(ï¿½Þ¿ï¿½+ï¿½ï¿½ï¿½Ê½ï¿½)"
 FROM emp
 WHERE sal < 3000
-AND job = 'SALESMAN' -- Á¶°ÇÀý(where) ÀÛ¼º.
+AND job = 'SALESMAN' -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(where) ï¿½Û¼ï¿½.
 ORDER BY ename desc;
 
 SELECT *
 FROM emp
 WHERE sal > 2000
-OR job = 'SALESMAN'; -- AÁ¶°Ç ÀÌ°Å³ª BÁ¶°Ç.
+OR job = 'SALESMAN'; -- Aï¿½ï¿½ï¿½ï¿½ ï¿½Ì°Å³ï¿½ Bï¿½ï¿½ï¿½ï¿½.
 
--- ±Þ¿©°¡ 2000 ~ 3000 »çÀÌÀÎ Á÷¿ø.
+-- ï¿½Þ¿ï¿½ï¿½ï¿½ 2000 ~ 3000 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 SELECT *
 FROM emp
 WHERE sal between 2000 AND 3000
@@ -20,7 +20,7 @@ WHERE sal between 2000 AND 3000
 --and   sal >= 2000
 ;
 
--- 1981³âµµ¿¡ ÀÔ»çÇÑ »ç¿øÁ¤º¸.
+-- 1981ï¿½âµµï¿½ï¿½ ï¿½Ô»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 SELECT *
 FROM emp
 WHERE hiredate between '81/01/01' and '81/12/31'
@@ -40,17 +40,17 @@ WHERE comm is null; -- ''
 -- like ( = )
 SELECT *
 from EMP
-where ename like '_LA%'; --'%LA%'; --CLARK, CLA % => *(¾ø°Å³ª ÇÑ±ÛÀÚ ÀÌ»ó)
-                                   --           _ => ÇÑ±ÛÀÚ(¿¡ ´ëÀÀ)
+where ename like '_LA%'; --'%LA%'; --CLARK, CLA % => *(ï¿½ï¿½ï¿½Å³ï¿½ ï¿½Ñ±ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½)
+                                   --           _ => ï¿½Ñ±ï¿½ï¿½ï¿½(ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
                                    
 SELECT *
-FROM professor -- Primary Key (Áßº¹x)
+FROM professor -- Primary Key (ï¿½ßºï¿½x)
 WHERE deptno in (101, 103)
 AND position like '%full%' --not in ('a full professor')-- 'a full professor'
 ; 
 
 SELECT *
-FROM professor -- Primary Key (Áßº¹x)
+FROM professor -- Primary Key (ï¿½ßºï¿½x)
 --WHERE name like '%an'
 --WHERE (bonus is null and pay >= 300) -- 1) pay + bonus >= 300, 2)bonus is null, pay>=300
 --   or (pay + bonus >= 300)
@@ -63,14 +63,14 @@ FROM department;
 SELECT *
 FROM employees;
 
--- ±³¼ö, ÇÐ»ý => ±³¼ö(ÇÐ»ý)¹øÈ£/ ÀÌ¸§/ ÇÐ°úÁ¤º¸.
+-- ï¿½ï¿½ï¿½ï¿½, ï¿½Ð»ï¿½ => ï¿½ï¿½ï¿½ï¿½(ï¿½Ð»ï¿½)ï¿½ï¿½È£/ ï¿½Ì¸ï¿½/ ï¿½Ð°ï¿½ï¿½ï¿½ï¿½ï¿½.
 SELECT profno, name, deptno
 FROM professor
-UNION ALL -- Áßº¹µÈ °ª Ãâ·Â; UNION -- Áßº¹µÈ °ªÀº Á¦°Å
+UNION ALL -- ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½; UNION -- ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 SELECT studno, name, deptno1
 FROM student;
 
--- UNION ALL(Áßº¹)
+-- UNION ALL(ï¿½ßºï¿½)
 SELECT studno, name
 FROM student
 WHERE deptno1 = 101
@@ -79,3 +79,9 @@ SELECT studno, name
 FROM student
 WHERE deptno2 = 201
 order by 1;
+
+----------- 12.29 todo. --------------
+select ename || '''s sal is $' || sal 
+from emp;
+--------------------------------------
+
