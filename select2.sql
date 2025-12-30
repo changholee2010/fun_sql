@@ -1,7 +1,7 @@
 SELECT ename
-     , sal "�λ��� �޿�"
-     , sal + comm "�ѱ޿�"
-     , (sal + comm) * 1.1 as "�λ�� �޿�(�޿�+���ʽ�)"
+     , sal "인상전 급여"
+     , sal + comm "전체급여"
+     , (sal + comm) * 1.1 as "인상후 급여"
 FROM emp
 WHERE sal < 3000
 AND job = 'SALESMAN' -- ������(where) �ۼ�.
@@ -81,7 +81,7 @@ WHERE deptno2 = 201
 order by 1;
 
 ----------- 12.29 todo. --------------
-select ename || '''s sal is $' || sal 
+select ename || '''s sal is $' || sal "Name and Salary"
 from emp;
 --------------------------------------
 
