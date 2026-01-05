@@ -177,13 +177,206 @@ FROM student;
 */
 SELECT * FROM department;
 
+SELECT * FROM tab;
+
+-- 이름,주민번호...
+SELECT name 
+      ,jumin
+      ,decode(substr(jumin, 7, 1), 1, 'Man', 2, 'Woman') "Gender"
+      -- case when then ... end 구문으로 변경.
+      ,CASE substr(jumin, 7, 1) WHEN '1' THEN 'Man'
+                                WHEN '2' THEN 'Woman'
+       END "Gender2"
+FROM student
+WHERE deptno1 = 101;
+
+SELECT name 
+      ,tel
+      ,decode(substr(tel, 1, instr(tel, ')', 1) - 1) -- 판별할 값.
+             ,'02', 'SEOUL'
+             ,'031', 'GYEONGGI'
+             ,'051', 'BUSAN'
+             ,'052', 'ULSAN'
+             ,'055', 'GYEONGNAM'
+             ,'ETC') loc
+      -- case 컬럼 when 조건1 then 출력1     구문.
+      ,CASE substr(tel, 1, instr(tel, ')', 1) - 1) WHEN '02' THEN 'SEOUL'
+                                                   WHEN '031' THEN 'GYEONGGI'
+                                                   WHEN '051' THEN 'BUSAN'
+                                                   WHEN '052' THEN 'ULSAN'
+                                                   WHEN '055' THEN 'GYEONGNAM'
+                                                   ELSE 'ETC'
+       END loc2
+FROM student
+--WHERE deptno1 = 101
+;
+
+-- case 구문을 활용 조건의 범위를 지정.
+-- 01 ~ 03 => 1/4,  04 ~ 06 => 2/4, ... 10 ~ 12 => 4/4
+SELECT name
+      ,substr(jumin, 3, 2) "MONTH"
+      ,CASE WHEN substr(jumin, 3, 2) BETWEEN '01' AND '03' THEN '1/4'
+            WHEN substr(jumin, 3, 2) BETWEEN '04' AND '06' THEN '2/4'
+            WHEN substr(jumin, 3, 2) BETWEEN '07' AND '09' THEN '3/4'
+            WHEN substr(jumin, 3, 2) BETWEEN '10' AND '12' THEN '4/4'
+       END "Quater"
+FROM student;
+
+-- case 퀴즈.
+SELECT empno
+      ,ename
+      ,sal
+      ,CASE WHEN sal BETWEEN 1 AND 1000 THEN 'Level 1'
+            WHEN sal BETWEEN 1001 AND 2000 THEN 'Level 2'
+            WHEN sal BETWEEN 2001 AND 3000 THEN 'Level 3'
+            WHEN sal BETWEEN 3001 AND 4000 THEN 'Level 4'
+            ELSE 'Level 5'
+       END "LEVEL"
+FROM emp
+ORDER BY sal desc;
+
+-- group 함수.
+SELECT deptno, ename, count(*) "인원", sum(sal) "부서별 급여"
+FROM emp
+GROUP BY deptno, ename; -- 부서번호별 그룹.
+
+-- emp 테이블.
+SELECT * FROM emp;
+SELECT deptno, job
+      ,count(1) "건수"
+      ,sum(sal + nvl(comm, 0)) "직무별 급여합계"
+      ,round(sum(sal + nvl(comm, 0)) / count(1)) "직무별 평균급여"
+      ,round(avg(sal + nvl(comm, 0)))  "직무별 평균급여1"
+      ,min(sal + nvl(comm, 0)) "최저급여"
+      ,max(sal + nvl(comm, 0)) "최고급여"
+      --,stddev(sal) "표준편차"
+      --,variance(sal) "분산"
+FROM emp
+GROUP BY deptno, job; -- 부서, 직무 
+
+-- 직무별 그룹.
+SELECT job
+      ,sum(sal)
+      ,round(avg(sal)) "직무별 평균급여"
+FROM emp
+--WHERE sal > 1500                 -- where 절 조건문.
+GROUP BY job
+--HAVING round(avg(sal)) > 1500; -- having 절 조건문.
+UNION ALL
+SELECT '전체'
+      ,sum(sal)
+      ,round(avg(sal))
+FROM emp;
+
+-- 부서/ 직무(업)/ 정보조회(평균급여, 사원수).
+-- 1.부서별 직무별 평균급여, 사원수.
+SELECT deptno||'', job, avg(sal), count(1)
+FROM emp
+GROUP BY deptno, job
+-- 2.부서별 평균급여, 사원부.
+UNION all
+SELECT deptno||'', '소계', round(avg(sal)), count(1)
+FROM emp 
+GROUP BY deptno
+-- 3.전체 평균급여, 사원수.
+UNION ALL
+SELECT '전체', '', round(avg(sal)), count(1)
+FROM emp
+ORDER BY 1, 2;
+
+-- rollup 함수.
+SELECT nvl(deptno || '', '전체') dept
+      ,decode(deptno, NULL, ' ', nvl(job, '소계')) job
+      ,round(avg(sal)) avg_sal
+      ,count(1) cnt_emp
+      --,nvl(deptno, 1) order_by
+FROM emp
+GROUP BY rollup(deptno, job)
+ORDER BY nvl(deptno, 1), 1, 2;
+
+-- emp, dept 테이블.
+SELECT empno, ename, e.deptno, dname, loc, d.deptno
+FROM emp e -- driving 테이블.
+join dept d ON e.deptno = d.deptno -- 조인 기준.
+WHERE dname = 'ACCOUNTING'; -- ANSI 조인.
+
+SELECT empno, ename, e.deptno, dname, loc, d.deptno
+FROM emp e -- driving 테이블.
+    ,dept d
+WHERE e.deptno = d.deptno
+AND   dname = 'ACCOUNTING'; -- ORACLE 조인.
+
+SELECT *
+FROM dept;
+
+-- 학생, 교수, 학과 조인결과.
+-- 학번, 이름, 담당교수이름, 학과명.
+SELECT s.studno "학번"
+      ,s.name "학생이름"
+      ,p.name "교수이름"
+      ,d.dname "학과명"
+FROM student s
+JOIN professor p ON s.profno = p.profno -- 학생 - 교수 테이블의 조인조건.
+JOIN department d ON s.deptno1 = d.deptno -- 학생 - 학과 테이블 조인.
+; -- 등가조인(equi join)
+
+-- 고객테이블()
+SELECT c.*, g.gname
+FROM customer c
+JOIN gift g ON c.point >= g.g_start AND c.point <= g.g_end
+--JOIN gift g ON c.point BETWEEN g.g_start AND g.g_end
+; -- 비등가조인(non-equi join)
+
+-- 학생, 학점
+SELECT s.studno "학번"
+      ,s.name "학생이름"
+      ,c.total "점수"
+      ,h.grade
+FROM student s
+JOIN score c ON s.studno = c.studno
+JOIN hakjum h ON c.total >= h.min_point AND c.total <= h.max_point;
+
+-- 문제2.
+SELECT name
+      ,e.POSITION
+      ,pay
+      ,s_pay "Low PAY"
+      ,e_pay "High Pay"
+FROM emp2 e
+JOIN p_grade p ON e.POSITION = p.position;
+
+-- 문제3.
+SELECT name
+      ,trunc(MONTHS_BETWEEN(sysdate, birthday) / 12) "AGE"
+      ,e.POSITION curr_position
+      ,p.POSITION be_position
+FROM emp2 e
+JOIN p_grade p 
+ON trunc(MONTHS_BETWEEN(sysdate, birthday) / 12) BETWEEN p.s_age AND p.e_age;
+
+-- 아우터조인(outer join) vs inner join
+SELECT s.studno "학번"
+      ,s.name "학생이름"
+      ,p.profno "교수번호"
+      ,p.name "교수이름"
+FROM student s
+JOIN professor p ON s.profno = p.profno;
+-- self join
+SELECT e1.empno "사원번호"
+      ,e1.ename "사원이름"
+      ,e2.empno "관리자번호"
+      ,e2.ename "관리자이름"
+FROM emp e1
+LEFT OUTER JOIN emp e2 ON e1.mgr = e2.empno;
+
+-- 문제4)
 
 
 
 
-UPDATE professor
-SET    hiredate = ADD_MONTHS(hiredate, -5*12)
-WHERE 1 = 1;
+
+
+
 
 
 
