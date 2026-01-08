@@ -25,6 +25,27 @@ GROUP by e1.empno
         ,e1.hiredate
 ORDER BY 4;
 
+-- 제약조건 이름과 함께 테이블생성.
+create table employees (
+  emp_no number(4) constraint employees_pk primary key,
+  emp_name varchar2(100) constraint emp_name_nn not null,
+  jumin_no char(14) constraint emp_jumin_nn not null
+                    constraint emp_jumin_uk unique,
+  deptno number(2) constraint emp_dept_fk references dept(deptno)
+);
+insert into employees (emp_no, emp_name, jumin_no, deptno)
+values(1002, 'Hong', '990102-1234567', 50);
+
+delete from employees
+where emp_no = 1002;
+
+select * from dept;
+
+delete from dept
+where deptno = 50;
+
+insert into dept 
+values(50, 'SAMPLE', 'SEOUL');
 
 -- 게시판(제목, 내용, 작성자, 작성시간, 조회수, 수정시간 .... )
 DROP TABLE board;

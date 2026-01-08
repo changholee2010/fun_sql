@@ -4,19 +4,37 @@ const db = require("./db");
 
 const app = express(); // 인스턴스 생성.
 
+app.use(express.static("public"));
+app.use(express.json());
+
 // URL 주소 - 실행함수 => 라우팅.
 // "/"
 app.get("/", (req, res) => {
   res.send("/ 이창호홈에 오신걸 환영합니다.");
 });
 
-// "/customer"
-app.get("/customer", (req, res) => {
-  res.send("/customer 경로가 호출됨.");
-});
-
-app.get("/product", (req, res) => {
-  res.send("/product 경로가 호출됨.");
+// 요청방식 GET vs. POST
+// get : 단순조회.
+// post : 많은 양의 전달.
+app.post("/add_board", async (req, res) => {
+  const { board_no, title, content, writer } = req.body;
+  const qry = `insert into board (board_no, title, content, writer)
+               values(:board_no, :title, :content, :writer)`;
+  try {
+    const connection = await db.getConnection();
+    const result = await connection.execute(qry, [
+      board_no,
+      title,
+      content,
+      writer,
+    ]);
+    console.log(result); // { lastRowid: 'AAAS2aAAHAAAAN1AAF', rowsAffected: 1 }
+    connection.commit();
+    res.send("처리완료"); // 서버 -> 클라이언트 응답 결과.
+  } catch (err) {
+    console.log(err);
+    res.send("처리중 에러");
+  }
 });
 
 // "/student" -> 화면에 출력.
