@@ -12,6 +12,9 @@ fetch("boards")
             <td>${elem.TITLE}</td>
             <td>${elem.WRITER}</td>
             <td>${new Date(elem.WRITE_DATE).toLocaleString()}</td>
+            <td><button onclick='deleteRow(${
+              elem.BOARD_NO
+            })' class='delete'>삭제</button></td>
           </tr>`;
       const subject = document.querySelector("tbody");
       subject.insertAdjacentHTML("afterbegin", insertHtml);
@@ -53,6 +56,9 @@ document.querySelector("form").addEventListener("submit", (e) => {
             <td>${result.title}</td>
             <td>${result.writer}</td>
             <td>${new Date().toLocaleString()}</td>
+            <td><button onclick='deleteRow(${
+              result.board_no
+            })' class='delete'>삭제</button></td>
           </tr>`;
       const subject = document.querySelector("tbody");
       subject.insertAdjacentHTML("afterbegin", insertHtml);
@@ -61,3 +67,8 @@ document.querySelector("form").addEventListener("submit", (e) => {
       console.log(err);
     }); // fetch() 실행이 에러이면...
 });
+
+// 글삭제.
+function deleteRow(bno) {
+  console.log(bno);
+}
