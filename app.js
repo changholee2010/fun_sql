@@ -44,10 +44,12 @@ app.post("/add_board", async (req, res) => {
     ]);
     console.log(result); // { lastRowid: 'AAAS2aAAHAAAAN1AAF', rowsAffected: 1 }
     connection.commit();
-    res.send("처리완료"); // 서버 -> 클라이언트 응답 결과.
+    //res.send("처리완료"); // 서버 -> 클라이언트 응답 결과.
+    res.json({ board_no, title, content, writer });
   } catch (err) {
     console.log(err);
-    res.send("처리중 에러");
+    //res.send("처리중 에러");
+    res.json({ retCode: "NG", retMsg: "DB 에러" });
   }
 });
 

@@ -44,15 +44,18 @@ document.querySelector("form").addEventListener("submit", (e) => {
     body: JSON.stringify(data),
   })
     .then((data) => {
-      console.log(data);
-      return data.text();
+      return data.json();
     }) // fetch() 실행이 성공이면...
     .then((result) => {
-      if (result == "처리완료") {
-        alert("성공");
-      } else if (result == "처리중 에러") {
-        alert("처리실패");
-      }
+      console.log(result);
+      const insertHtml = `<tr>
+            <td>${result.board_no}</td>
+            <td>${result.title}</td>
+            <td>${result.writer}</td>
+            <td>${new Date().toLocaleString()}</td>
+          </tr>`;
+      const subject = document.querySelector("tbody");
+      subject.insertAdjacentHTML("afterbegin", insertHtml);
     })
     .catch((err) => {
       console.log(err);
