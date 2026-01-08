@@ -48,6 +48,27 @@
       button:hover {
         background-color: #45a049;
       }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
     </style>
   </head>
   <body>
@@ -68,6 +89,21 @@
 
         <button type="submit">등록</button>
       </form>
+    </div>
+    <!-- 글번호/제목/작성자/작성일시 -->
+    <div class="container">
+      <h2>게시글 목록</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
     <script src="js/board.js"></script>
   </body>

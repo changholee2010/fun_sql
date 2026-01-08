@@ -13,6 +13,20 @@ app.get("/", (req, res) => {
   res.send("/ 이창호홈에 오신걸 환영합니다.");
 });
 
+// 댓글 전체 목록을 반환.
+app.get("/boards", async (req, res) => {
+  const qry = "select * from board order by 1";
+  try {
+    const connection = await db.getConnection();
+    const result = await connection.execute(qry);
+    console.log("성공");
+    res.send(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.send("실패");
+  }
+});
+
 // 요청방식 GET vs. POST
 // get : 단순조회.
 // post : 많은 양의 전달.

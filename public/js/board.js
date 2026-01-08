@@ -1,3 +1,26 @@
+// fetch를 통해서 게시글 데이터 갖져오기.
+fetch("boards")
+  .then((response) => {
+    return response.json();
+  })
+  .then((result) => {
+    // 반복처리.
+    result.forEach((elem) => {
+      // tbody subject
+      const insertHtml = `<tr>
+            <td>${elem.BOARD_NO}</td>
+            <td>${elem.TITLE}</td>
+            <td>${elem.WRITER}</td>
+            <td>${new Date(elem.WRITE_DATE).toLocaleString()}</td>
+          </tr>`;
+      const subject = document.querySelector("tbody");
+      subject.insertAdjacentHTML("afterbegin", insertHtml);
+    }); // end of forEach.
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
 // form에다가 submit 이벤트 등록.
 document.querySelector("form").addEventListener("submit", (e) => {
   e.preventDefault();
