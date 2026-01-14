@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>회원관리</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      /* 탭 스타일 */
+      .tabs {
+        display: flex;
+        border-bottom: 2px solid #333;
+        margin-bottom: 15px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #333;
+        border-bottom: none;
+        background: #f1f1f1;
+        margin-right: 5px;
+      }
+
+      .tab.active {
+        background: #fff;
+        font-weight: bold;
+      }
+
+      .content {
+        display: none;
+      }
+
+      .content.active {
+        display: block;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background: #eee;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 6px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        height: 80px;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>회원관리</h2>
+
+    <!-- 탭 영역 -->
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('list')">목록</div>
+      <div class="tab" onclick="openTab('register')">등록</div>
+      <div class="tab" onclick="openTab('detail')">상세</div>
+    </div>
+
+    <!-- 목록 페이지 -->
+    <div id="list" class="content active">
+      <table>
+        <thead>
+          <tr>
+            <th>회원번호</th>
+            <th>이름</th>
+            <th>연락처</th>
+            <th>생년월일</th>
+          </tr>
+        </thead>
+        <tbody id="memberList">
+          <!-- JS로 데이터 출력 -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 등록 페이지 -->
+    <div id="register" class="content">
+      <label>회원번호</label>
+      <input type="text" id="regNo" />
+
+      <label>이름</label>
+      <input type="text" id="regName" />
+
+      <label>연락처</label>
+      <input type="text" id="regPhone" />
+
+      <label>생년월일</label>
+      <input type="date" id="regBirth" />
+
+      <label>특징 메모</label>
+      <textarea id="regMemo"></textarea>
+
+      <button class="btn" onclick="addMember()">회원 등록</button>
+    </div>
+
+    <!-- 상세 페이지 -->
+    <div id="detail" class="content">
+      <p><strong>회원번호:</strong> <span id="dNo"></span></p>
+      <p><strong>이름:</strong> <span id="dName"></span></p>
+      <p><strong>연락처:</strong> <span id="dPhone"></span></p>
+      <p><strong>생년월일:</strong> <span id="dBirth"></span></p>
+      <p><strong>특징 메모:</strong></p>
+      <p id="dMemo"></p>
+    </div>
+
+    <script>
+      let members = [];
+
+      function openTab(tabId) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".content")
+          .forEach((c) => c.classList.remove("active"));
+
+        document
+          .querySelector(`[onclick="openTab('${tabId}')"]`)
+          .classList.add("active");
+        document.getElementById(tabId).classList.add("active");
+      }
+
+      function addMember() {
+        const member = {
+          no: regNo.value,
+          name: regName.value,
+          phone: regPhone.value,
+          birth: regBirth.value,
+          memo: regMemo.value,
+        };
+
+        members.push(member);
+        renderList();
+        clearForm();
+        openTab("list");
+      }
+
+      function renderList() {
+        const list = document.getElementById("memberList");
+        list.innerHTML = "";
+
+        members.forEach((m, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+                <td>${m.no}</td>
+                <td style="cursor:pointer;color:blue" onclick="showDetail(${index})">${m.name}</td>
+                <td>${m.phone}</td>
+                <td>${m.birth}</td>
+            `;
+          list.appendChild(tr);
+        });
+      }
+
+      function showDetail(index) {
+        const m = members[index];
+        dNo.textContent = m.no;
+        dName.textContent = m.name;
+        dPhone.textContent = m.phone;
+        dBirth.textContent = m.birth;
+        dMemo.textContent = m.memo;
+
+        openTab("detail");
+      }
+
+      function clearForm() {
+        regNo.value = "";
+        regName.value = "";
+        regPhone.value = "";
+        regBirth.value = "";
+        regMemo.value = "";
+      }
+    </script>
+  </body>
+</html>

@@ -13,6 +13,27 @@ app.get("/", (req, res) => {
   res.send("/ 이창호홈에 오신걸 환영합니다.");
 });
 
+// 댓글 삭제 기능.
+// 요청방식(get) - '/remove_board/:board_no'
+// 반환되는 결과 ( {retCode: 'OK' or 'NG'})
+// const board_no = req.params.board_no;
+app.get("/remove_board/:bno", async (req, res) => {
+  const bno = req.params.bno;
+  const qry = "delete from board where board_no = :bno";
+  try {
+    const connection = await db.getConnection();
+    const result = await connection.execute(qry, [bno]);
+    console.log(result); // { lastRowid: 'AAAS2aAAHAAAAN1AAF', rowsAffected: 1 }
+    connection.commit();
+    //res.send("처리완료"); // 서버 -> 클라이언트 응답 결과.
+    res.json({ retCode: "OK" });
+  } catch (err) {
+    console.log(err);
+    //res.send("처리중 에러");
+    res.json({ retCode: "NG", retMsg: "DB 에러" });
+  }
+});
+
 // 댓글 전체 목록을 반환.
 app.get("/boards", async (req, res) => {
   const qry = "select * from board order by 1";

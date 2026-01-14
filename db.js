@@ -6,7 +6,7 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const dbConfig = {
   user: "scott",
   password: "tiger",
-  connectString: "192.168.0.29:1521/xe",
+  connectString: "localhost:1521/xe",
 };
 
 // db접속하기 위한 session을 얻어 오는 함수.

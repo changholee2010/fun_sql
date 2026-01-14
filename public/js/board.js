@@ -71,4 +71,10 @@ document.querySelector("form").addEventListener("submit", (e) => {
 // 글삭제.
 function deleteRow(bno) {
   console.log(bno);
+  fetch("/remove_board/" + bno) // localhost:3000/remove_board/35
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
 }
